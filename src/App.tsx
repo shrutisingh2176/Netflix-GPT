@@ -1,12 +1,11 @@
+import Body from "./components/Body";
 
 
 
-export default function App() {
+ function App() {
   return (
-    <h1 className="text-3xl font-bold text-blue-500">
-      Tailwind is working 🚀
-    </h1>
+    <Body/>
   );
 }
 
-
+export default App;
