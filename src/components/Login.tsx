@@ -1,13 +1,70 @@
-import {useState} from "react"
+import {useState, useRef} from "react"
 import React from 'react'
 import Header from './Header'
+import { checkValidData } from "../utils/validate";
+import {  createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import {auth } from "../utils/firebase"
 
 
 const Login = () => {
 const [isSignInForm, setIsSignInForm] = useState<boolean>(true);
+const [errorMessage, setErrorMessage] = useState<string | null>(null); 
+
+const email = useRef<HTMLInputElement> (null);
+const password = useRef<HTMLInputElement> (null);
+
+ const handleButtonClick = () => {
+    // Validate the form data 
+    if (!email.current || !password.current) return;
+   console.log(email.current.value);
+   console.log(password.current.value);
+   const message = checkValidData (email.current.value,password.current.value)
+   //console.log(message);
+    setErrorMessage(message);
+    if (message) return;
+
+    if (!isSignInForm){
+      //Sign Up Logic 
+      createUserWithEmailAndPassword(auth,
+         email.current.value,
+         password.current.value
+        )
+
+  .then((userCredential) => {
+    
+    const user = userCredential.user;
+    console.log(user)
+    
+  })
+  .catch((error) => {
+    const errorCode = error.code;
+    const errorMessage = error.message;
+      setErrorMessage(errorCode + " - " + errorMessage);
+    
+  });
+    } else{
+      signInWithEmailAndPassword(auth,
+         email.current.value,
+         password.current.value)
+      .then((userCredential) => {
+        
+        const user = userCredential.user;
+        console.log(user)
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+         setErrorMessage(errorCode + " - " + errorMessage);
+      });
+
+    }
+}
+
 const toggleSignInForm =() =>{
     setIsSignInForm(!isSignInForm);
 };
+
+
 
 return (
     <div> 
@@ -19,7 +76,7 @@ return (
       alt="bg-img" />
       <div className="absolute inset-0 bg-black opacity-60"></div>
 
-      <form className=' absolute top-1/2 left-1/2 z-10 w-[380px] -translate-x-1/2 -translate-y-1/2 rounded-md bg-black bg-opacity-75 p-12 text-white'>
+      <form onSubmit={(e) => e.preventDefault()} className=' absolute top-1/2 left-1/2 z-10 w-[380px] -translate-x-1/2 -translate-y-1/2 rounded-md bg-black bg-opacity-75 p-12 text-white'>
         <h1 className='mb-6 text-3xl font-bold '> {isSignInForm ? "Sign In" : "Sign Up"}</h1>
 
         {!isSignInForm && (
@@ -32,18 +89,24 @@ return (
         )}
 
         <input
-          //ref={email}
+          ref={email}
           type="text"
           placeholder="Email Address"
           className="mb-4 w-full rounded bg-zinc-800 p-3 text-white placeholder-gray-400 outline-none"
         />
           <input
-          //ref={password}
+          ref={password}
           type="password"
           placeholder="Password"
           className="mb-4 w-full rounded bg-zinc-800 p-3 text-white placeholder-gray-400 outline-none"
           />
-          <button className='w-full rounded bg-red-600 p-3 font-semibold hover:bg-red-700 '>
+
+             {errorMessage && (
+          <p className="text-red-500 font-bold text-sm py-2">{errorMessage}</p>
+        )}
+
+
+          <button className='w-full rounded bg-red-600 p-3 font-semibold hover:bg-red-700 ' onClick={handleButtonClick}>
             {isSignInForm ? "Sign In": "Sign Up"}
           </button>
 
