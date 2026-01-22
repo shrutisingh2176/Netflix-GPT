@@ -2,16 +2,23 @@ import {useState, useRef} from "react"
 import React from 'react'
 import Header from './Header'
 import { checkValidData } from "../utils/validate";
-import {  createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import {  createUserWithEmailAndPassword, signInWithEmailAndPassword ,updateProfile } from "firebase/auth";
 import {auth } from "../utils/firebase"
+import { useNavigate } from "react-router-dom";
+import { BgImg } from "../utils/constants";
+import { useDispatch } from "react-redux";
+import { addUser } from "../utils/userSlice";
 
 
 const Login = () => {
 const [isSignInForm, setIsSignInForm] = useState<boolean>(true);
 const [errorMessage, setErrorMessage] = useState<string | null>(null); 
+const navigate = useNavigate();
 
 const email = useRef<HTMLInputElement> (null);
 const password = useRef<HTMLInputElement> (null);
+ const name = useRef<HTMLInputElement | null>(null);
+  const dispatch = useDispatch();
 
  const handleButtonClick = () => {
     // Validate the form data 
@@ -33,7 +40,32 @@ const password = useRef<HTMLInputElement> (null);
   .then((userCredential) => {
     
     const user = userCredential.user;
+    updateProfile(user, {
+   displayName:  name.current ? name.current.value : "User",
+   photoURL: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRRKNdKRIgbcMkyGq1cQeq40IA-IQS-FDWnTQ&s"
+   
+})
+.then(() => {
+  // Profile updated!
+   const { uid, email, displayName, photoURL } = auth.currentUser!;
+
+              dispatch(
+                addUser({
+                  uid: uid,
+                  email: email,
+                  displayName: displayName,
+                  photoURL: photoURL,
+                }),
+              );
+   navigate("/browse")
+})
+.catch((error) => {
+  // An error occurred
+  setErrorMessage(error.message);
+});
+
     console.log(user)
+   
     
   })
   .catch((error) => {
@@ -50,6 +82,7 @@ const password = useRef<HTMLInputElement> (null);
         
         const user = userCredential.user;
         console.log(user)
+        navigate("/browse")
       })
       .catch((error) => {
         const errorCode = error.code;
@@ -72,7 +105,7 @@ return (
       <Header/>
       <div className="relative h-screen">
         <img className="h-full w-full"
-      src="https://assets.nflxext.com/ffe/siteui/vlv3/797df41b-1129-4496-beb3-6fc2f29c59d3/web/IN-en-20260112-TRIFECTA-perspective_004732f9-7464-4a7c-940b-4a51c4f0f73f_large.jpg" 
+      src={BgImg} 
       alt="bg-img" />
       <div className="absolute inset-0 bg-black opacity-60"></div>
 
@@ -81,7 +114,7 @@ return (
 
         {!isSignInForm && (
           <input
-            //ref={name}
+            ref={name}
             type="text"
             placeholder="Full Name"
             className="mb-4 w-full rounded bg-zinc-800 p-3 text-white placeholder-gray-400 outline-none"
