@@ -63,7 +63,7 @@ const password = useRef<HTMLInputElement> (null);
   setErrorMessage(error.message);
 });
 
-    console.log(user)
+   // console.log(user)
    
     
   })
