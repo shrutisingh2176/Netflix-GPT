@@ -4,8 +4,7 @@ import Header from './Header'
 import { checkValidData } from "../utils/validate";
 import {  createUserWithEmailAndPassword, signInWithEmailAndPassword ,updateProfile } from "firebase/auth";
 import {auth } from "../utils/firebase"
-import { useNavigate } from "react-router-dom";
-import { BgImg } from "../utils/constants";
+import { BgImg, UserLogo } from "../utils/constants";
 import { useDispatch } from "react-redux";
 import { addUser } from "../utils/userSlice";
 
@@ -13,7 +12,7 @@ import { addUser } from "../utils/userSlice";
 const Login = () => {
 const [isSignInForm, setIsSignInForm] = useState<boolean>(true);
 const [errorMessage, setErrorMessage] = useState<string | null>(null); 
-const navigate = useNavigate();
+
 
 const email = useRef<HTMLInputElement> (null);
 const password = useRef<HTMLInputElement> (null);
@@ -42,7 +41,7 @@ const password = useRef<HTMLInputElement> (null);
     const user = userCredential.user;
     updateProfile(user, {
    displayName:  name.current ? name.current.value : "User",
-   photoURL: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRRKNdKRIgbcMkyGq1cQeq40IA-IQS-FDWnTQ&s"
+   photoURL:UserLogo
    
 })
 .then(() => {
@@ -57,7 +56,7 @@ const password = useRef<HTMLInputElement> (null);
                   photoURL: photoURL,
                 }),
               );
-   navigate("/browse")
+  
 })
 .catch((error) => {
   // An error occurred
@@ -81,8 +80,7 @@ const password = useRef<HTMLInputElement> (null);
       .then((userCredential) => {
         
         const user = userCredential.user;
-        console.log(user)
-        navigate("/browse")
+       
       })
       .catch((error) => {
         const errorCode = error.code;
