@@ -102,12 +102,12 @@ return (
        { /*w-3/12 absolute p-12 bg-black my-36*/}
       <Header/>
       <div className="relative h-screen">
-        <img className="h-full w-full"
+        <img className="md:h-full md:w-full object-cover h-screen"
       src={BgImg} 
       alt="bg-img" />
       <div className="absolute inset-0 bg-black opacity-60"></div>
 
-      <form onSubmit={(e) => e.preventDefault()} className=' absolute top-1/2 left-1/2 z-10 w-[380px] -translate-x-1/2 -translate-y-1/2 rounded-md bg-black bg-opacity-75 p-12 text-white'>
+      <form onSubmit={(e) => e.preventDefault()} className=' absolute md:top-1/2 top-1/3 left-1/2 z-10 w-[380px] -translate-x-1/2 -translate-y-1/2 rounded-md bg-black bg-opacity-75 p-12 text-white'>
         <h1 className='mb-6 text-3xl font-bold '> {isSignInForm ? "Sign In" : "Sign Up"}</h1>
 
         {!isSignInForm && (
