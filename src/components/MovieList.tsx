@@ -2,7 +2,7 @@ import { MovieListProps } from "../utils/Types"
 import MovieCard from "./MovieCard"
 
 const MovieList = ({ title, movies }: MovieListProps) => {
-    console.log(movies);
+   // console.log(movies);
   return (
     <div  className="px-6">
 

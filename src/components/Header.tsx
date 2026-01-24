@@ -63,7 +63,7 @@ const Header = () => {
       dispatch(toggleGptSearchView());
     }
       const lang = useSelector((store) => store.config.lang);
-      console.log(lang);
+      //console.log(lang);
 
       const handleLanguageChange = (e: any) => {
         dispatch(changeLanguage(e.target.value));
@@ -95,7 +95,7 @@ const Header = () => {
 
             <button className="py-2 px-4 mx-4 my-2 bg-purple-800 text-white rounded-lg"
             onClick={handleGptSearchClick} >
-              GPT Search
+              {showGptSearch? "Homepage" : "GPT Search"}
             </button>
 
           {/* <img alt="UserLogo" src={UserLogo} */}

@@ -22,8 +22,8 @@ const password = useRef<HTMLInputElement> (null);
  const handleButtonClick = () => {
     // Validate the form data 
     if (!email.current || !password.current) return;
-   console.log(email.current.value);
-   console.log(password.current.value);
+  // console.log(email.current.value);
+   //console.log(password.current.value);
    const message = checkValidData (email.current.value,password.current.value)
    //console.log(message);
     setErrorMessage(message);
